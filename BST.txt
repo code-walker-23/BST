@@ -1,0 +1,75 @@
+#include<stdio.h>
+#include<cstdlib>
+#include <limits.h>
+#include <stdlib.h>
+struct node{
+	int data;
+	struct node* left;
+	struct node* right;
+};
+struct node* Createnode(int data){
+	struct node *n = (struct node*)malloc(sizeof(struct node));
+	n->data = data;
+	n->left = NULL;
+	n->right = NULL;
+	return n;
+}
+void insertI(struct node* root,int key){
+	struct node* previous = NULL;
+	while(root!=NULL)
+	{
+		previous = root;
+		if(key==previous->data)return ;
+		else if(key<previous->data)root = root->left;
+		else root = root->right;
+	}
+	struct node* ne = Createnode(key);
+	if(key<previous->data)previous->left = ne;
+	else  previous->right = ne;
+
+}
+struct node* insertR(struct node* root,int key){
+	if(root==NULL)
+		return Createnode(key);
+	if(key<root->data) root->left = insertR(root->left,key);
+	else root->right = insertR(root->right,key);
+	return root;
+}
+struct node* SearchR(struct node* root,int key){
+	if(root==NULL || root->data==key) return root;
+	if(root->data<key)return SearchR(root->right,key);
+	else return SearchR(root->left,key);
+}
+struct node* SearchI(struct node* root,int key){
+	while(root!=NULL){
+		if(root->data==key)return root;
+		else if(root->data<key)root = root->right;
+		else root = root->left;
+	}
+	return NULL;
+}
+void In_Order(struct node* root){
+	if(root==NULL) return;
+	In_Order(root->left);
+	printf("%d\n",root->data);
+	In_Order(root->right);
+}
+int main(int argc, char const *argv[])
+{
+	
+	struct node* root  = Createnode(5);
+	insertI(root,100);
+	insertI(root,1);
+	insertI(root,16);
+	In_Order(root);
+	struct node* ans  = SearchI(root,11);
+	if(ans!= NULL)printf("Found : %d\n",ans->data);
+	else printf("Not found\n");
+	insertI(root,11);
+	struct node* ans1  = SearchI(root,11);
+	if(ans1!= NULL)printf("Found : %d\n",ans1->data);
+	else printf("Not found\n");
+	insertR(root,77);
+	In_Order(root);
+	
+}
